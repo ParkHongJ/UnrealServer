@@ -72,7 +72,7 @@ public:
 private:
 	bool SendPacket(SendBufferRef SendBuffer);
 
-	bool SendDesiredBytes(uint8* Buffer, int32 Size);
+	bool SendDesiredBytes(const uint8* Buffer, int32 Size);
 	
 protected:
 	FRunnableThread* Thread = nullptr;

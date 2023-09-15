@@ -2,9 +2,6 @@
 
 
 #include "Network/NetworkWorker.h"
-
-#include <Windows/DirectX/include/d3d9.h>
-
 #include "PacketSession.h"
 #include "Sockets.h"
 
@@ -167,7 +164,7 @@ bool SendWorker::SendPacket(SendBufferRef SendBuffer)
 	return true;
 }
 
-bool SendWorker::SendDesiredBytes(uint8* Buffer, int32 Size)
+bool SendWorker::SendDesiredBytes(const uint8* Buffer, int32 Size)
 {
 	while (Size > 0)
 	{

@@ -6,6 +6,7 @@
 
 void GameSession::OnConnected()
 {
+	cout << "클라이언트 접속 완료 IP : " << GetAddress().GetIpAddress().c_str() << endl;
 	GSessionManager.Add(static_pointer_cast<GameSession>(shared_from_this()));
 }
 

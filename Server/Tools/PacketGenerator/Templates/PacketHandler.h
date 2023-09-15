@@ -72,6 +72,7 @@ private:
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->Buffer());
 		header->size = packetSize;
 		header->id = pktId;
+		pkt.SerializeToArray(&header[1], dataSize);
 		sendBuffer->Close(packetSize);
 
 		return sendBuffer;

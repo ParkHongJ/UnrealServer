@@ -9,7 +9,6 @@
 #include "Serialization/ArrayWriter.h"
 #include "SocketSubsystem.h"
 #include "PacketSession.h"
-#include "Protocol.pb.h"
 
 void USGameInstance::ConnectToGameServer()
 {
@@ -31,7 +30,7 @@ void USGameInstance::ConnectToGameServer()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Success")));
 		GameServerSession = MakeShared<PacketSession>(Socket);
 		GameServerSession->Run();
-		
+
 		Protocol::C_LOGIN pkt;
 		SendBufferRef SendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
 		SendPacket(SendBuffer);

@@ -70,6 +70,8 @@ bool ClientService::Start()
 	if (CanStart() == false)
 		return false;
 
+	cout << "서버 초기화 완료" << endl;
+
 	const int32 sessionCount = GetMaxSessionCount();
 	for (int32 i = 0; i < sessionCount; i++)
 	{
