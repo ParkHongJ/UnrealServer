@@ -4,16 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "NetworkActorBase.generated.h"
+#include "SpawnManager.generated.h"
+
+class UDataTable;
+class ANetworkActorBase;
 
 UCLASS()
-class SERVERSTUDY_API ANetworkActorBase : public AActor
+class SERVERSTUDY_API ASpawnManager : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ANetworkActorBase();
+	ASpawnManager();
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,11 +25,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void SetID(int ID)
-	{
-		networkID = ID;
-	}
-protected:
-	UPROPERTY(EditAnywhere)
-	int networkID;
+
+	void SpawnObject(TSubclassOf<ANetworkActorBase> Object, int64 id, FVector3d Pos);
+
+	TObjectPtr<UDataTable> SpawnClassTable;
 };

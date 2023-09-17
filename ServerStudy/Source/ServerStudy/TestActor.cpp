@@ -5,6 +5,8 @@
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"
 #include "SGameInstance.h"
+#include "NetworkActorBase/NetworkActorBase.h"
+
 // Sets default values
 ATestActor::ATestActor()
 {

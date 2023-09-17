@@ -6,7 +6,7 @@
 
 void GameSession::OnConnected()
 {
-	cout << "클라이언트 접속 완료 IP : " << GetAddress().GetIpAddress().c_str() << endl;
+	cout << "클라이언트 접속 완료" << endl;
 	GSessionManager.Add(static_pointer_cast<GameSession>(shared_from_this()));
 }
 
@@ -26,4 +26,12 @@ void GameSession::OnRecvPacket(BYTE* buffer, int32 len)
 
 void GameSession::OnSend(int32 len)
 {
+}
+
+shared_ptr<Player> GameSession::GetPlayer()
+{	
+	for (auto player : players)
+	{
+		return player.second;
+	}
 }

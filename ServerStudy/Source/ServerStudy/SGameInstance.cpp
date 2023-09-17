@@ -9,6 +9,20 @@
 #include "Serialization/ArrayWriter.h"
 #include "SocketSubsystem.h"
 #include "PacketSession.h"
+#include "Managers/SpawnManager.h"
+
+USGameInstance::USGameInstance()
+{
+}
+
+USGameInstance::~USGameInstance()
+{
+	if (spawnManager)
+	{
+		spawnManager->Destroy(); // UObject를 해제하기 위한 호출
+		spawnManager = nullptr;
+	}
+}
 
 void USGameInstance::ConnectToGameServer()
 {
@@ -30,7 +44,6 @@ void USGameInstance::ConnectToGameServer()
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Connection Success")));
 		GameServerSession = MakeShared<PacketSession>(Socket);
 		GameServerSession->Run();
-
 		Protocol::C_LOGIN pkt;
 		SendBufferRef SendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
 		SendPacket(SendBuffer);
@@ -66,3 +79,10 @@ void USGameInstance::SendPacket(SendBufferRef SendBuffer)
 
 	GameServerSession->SendPacket(SendBuffer);
 }
+
+TObjectPtr<ASpawnManager> USGameInstance::GetSpawnManager()
+{
+	
+	return spawnManager;
+}
+

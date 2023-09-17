@@ -3,8 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "GameFramework/Actor.h"
 #include "TestActor.generated.h"
+
+class ANetworkActorBase;
+
+USTRUCT(BlueprintType)
+struct FSubClassData : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<ANetworkActorBase> subclass;
+};
+
 
 UCLASS()
 class SERVERSTUDY_API ATestActor : public AActor

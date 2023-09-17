@@ -3,6 +3,7 @@
 #include "BufferReader.h"
 #include "BufferWriter.h"
 #include "GameSession.h"
+#include "GameSessionManager.h"
 
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
@@ -19,16 +20,17 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
 	loginPkt.set_success(true);
 
 	static std::atomic<uint64> idGenerator = 0;
-
-	auto player = loginPkt.add_players();
+	static double x = 0;
 
 	if (GameSessionRef gameSession = dynamic_pointer_cast<GameSession>(session))
 	{
 		shared_ptr<Player> playerRef = make_shared<Player>();
 		playerRef->id = idGenerator++;
-
-		player->set_playerid(playerRef->id);
-
+		playerRef->x = x;
+		playerRef->y = 0;
+		playerRef->z = 0;
+		x += 150;
+		
 		gameSession->AddPlayer(playerRef);
 	}
 
@@ -38,6 +40,14 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
 }
 
 bool Handle_C_ENTER_GAME(PacketSessionRef& session, Protocol::C_ENTER_GAME& pkt)
+{
+	GSessionManager.HandleEnterGame(dynamic_pointer_cast<GameSession>(session), pkt);
+
+
+	return true;
+}
+
+bool Handle_C_SPAWN(PacketSessionRef& session, Protocol::C_SPAWN& pkt)
 {
 	return true;
 }

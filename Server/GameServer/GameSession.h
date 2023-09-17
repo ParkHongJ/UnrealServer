@@ -5,6 +5,7 @@ class Player
 {
 public:
 	uint64 id;
+	double x, y, z;
 };
 class GameSession : public PacketSession
 {
@@ -22,6 +23,7 @@ public:
 	void AddPlayer(shared_ptr<Player> player) {
 		players.insert(make_pair(player->id, player));
 	}
+	shared_ptr<Player> GetPlayer();
 public:
 	weak_ptr<class Room> _room;
 private:

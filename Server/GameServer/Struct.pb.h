@@ -179,6 +179,9 @@ class Player final :
 
   enum : int {
     kPlayerIdFieldNumber = 1,
+    kXFieldNumber = 2,
+    kYFieldNumber = 3,
+    kZFieldNumber = 4,
   };
   // uint64 playerId = 1;
   void clear_playerid();
@@ -187,6 +190,33 @@ class Player final :
   private:
   uint64_t _internal_playerid() const;
   void _internal_set_playerid(uint64_t value);
+  public:
+
+  // double x = 2;
+  void clear_x();
+  double x() const;
+  void set_x(double value);
+  private:
+  double _internal_x() const;
+  void _internal_set_x(double value);
+  public:
+
+  // double y = 3;
+  void clear_y();
+  double y() const;
+  void set_y(double value);
+  private:
+  double _internal_y() const;
+  void _internal_set_y(double value);
+  public:
+
+  // double z = 4;
+  void clear_z();
+  double z() const;
+  void set_z(double value);
+  private:
+  double _internal_z() const;
+  void _internal_set_z(double value);
   public:
 
   // @@protoc_insertion_point(class_scope:Protocol.Player)
@@ -198,6 +228,9 @@ class Player final :
   typedef void DestructorSkippable_;
   struct Impl_ {
     uint64_t playerid_;
+    double x_;
+    double y_;
+    double z_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -232,6 +265,66 @@ inline void Player::_internal_set_playerid(uint64_t value) {
 inline void Player::set_playerid(uint64_t value) {
   _internal_set_playerid(value);
   // @@protoc_insertion_point(field_set:Protocol.Player.playerId)
+}
+
+// double x = 2;
+inline void Player::clear_x() {
+  _impl_.x_ = 0;
+}
+inline double Player::_internal_x() const {
+  return _impl_.x_;
+}
+inline double Player::x() const {
+  // @@protoc_insertion_point(field_get:Protocol.Player.x)
+  return _internal_x();
+}
+inline void Player::_internal_set_x(double value) {
+  
+  _impl_.x_ = value;
+}
+inline void Player::set_x(double value) {
+  _internal_set_x(value);
+  // @@protoc_insertion_point(field_set:Protocol.Player.x)
+}
+
+// double y = 3;
+inline void Player::clear_y() {
+  _impl_.y_ = 0;
+}
+inline double Player::_internal_y() const {
+  return _impl_.y_;
+}
+inline double Player::y() const {
+  // @@protoc_insertion_point(field_get:Protocol.Player.y)
+  return _internal_y();
+}
+inline void Player::_internal_set_y(double value) {
+  
+  _impl_.y_ = value;
+}
+inline void Player::set_y(double value) {
+  _internal_set_y(value);
+  // @@protoc_insertion_point(field_set:Protocol.Player.y)
+}
+
+// double z = 4;
+inline void Player::clear_z() {
+  _impl_.z_ = 0;
+}
+inline double Player::_internal_z() const {
+  return _impl_.z_;
+}
+inline double Player::z() const {
+  // @@protoc_insertion_point(field_get:Protocol.Player.z)
+  return _internal_z();
+}
+inline void Player::_internal_set_z(double value) {
+  
+  _impl_.z_ = value;
+}
+inline void Player::set_z(double value) {
+  _internal_set_z(value);
+  // @@protoc_insertion_point(field_set:Protocol.Player.z)
 }
 
 #ifdef __GNUC__
