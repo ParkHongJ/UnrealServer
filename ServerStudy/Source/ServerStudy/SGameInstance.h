@@ -30,8 +30,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SendLoginPacket(FString Id, FString Password);
+
+	UFUNCTION(BlueprintCallable)
+	void SendEnterGamePacket();
 	
 	
+	UFUNCTION(BlueprintNativeEvent)
+	void BPShowCharacterSelect();
+	
+	void ShowCharacterSelect(const Protocol::S_LOGIN& pkt);
 public:
 	void HandleSpawn(const Protocol::PlayerInfo& PlayerInfo);
 	void HandleSpawn(const Protocol::S_ENTER_GAME& EnterPkt);
@@ -39,13 +46,14 @@ public:
 	
 	void HandleDespawn(uint64 ObjectId);
 	void HandleDespawn(const Protocol::S_DESPAWN& DespawnPkt);
+	
 public:
 	FSocket* Socket;
 	FString IpAddress = TEXT("127.0.0.1");
 	int16 Port = 7778;
 	TSharedPtr<class PacketSession> GameServerSession;
 
-public:
+public:	
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> PlayerClass;
 

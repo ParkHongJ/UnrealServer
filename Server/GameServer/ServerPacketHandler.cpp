@@ -17,7 +17,7 @@ bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt)
 {
 	Protocol::S_LOGIN loginPkt;
 	loginPkt.set_success(true);
-
+	cout << "로그인 성공" << endl;
 	
 	for (int32 i = 0; i < 3; i++)
 	{

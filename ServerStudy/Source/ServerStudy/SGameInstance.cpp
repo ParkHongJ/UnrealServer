@@ -9,6 +9,7 @@
 #include "Serialization/ArrayWriter.h"
 #include "SocketSubsystem.h"
 #include "PacketSession.h"
+#include "Blueprint/UserWidget.h"
 
 void USGameInstance::ConnectToGameServer()
 {
@@ -68,8 +69,24 @@ void USGameInstance::SendPacket(SendBufferRef SendBuffer)
 void USGameInstance::SendLoginPacket(FString Id, FString Password)
 {
 	Protocol::C_LOGIN pkt;
-	SendBufferRef SendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
-	SendPacket(SendBuffer);
+	SEND_PACKET(pkt);
+}
+
+void USGameInstance::SendEnterGamePacket()
+{
+	Protocol::C_ENTER_GAME pkt;
+	pkt.set_playerindex(0);
+	SEND_PACKET(pkt);
+}
+
+void USGameInstance::BPShowCharacterSelect_Implementation()
+{
+	
+}
+
+void USGameInstance::ShowCharacterSelect(const Protocol::S_LOGIN& pkt)
+{
+	BPShowCharacterSelect();
 }
 
 void USGameInstance::HandleSpawn(const Protocol::PlayerInfo& PlayerInfo)

@@ -13,17 +13,21 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 	{
 		//로그인 성공
 		//로그인 정보를 받아서 나의 캐릭터들을 선택한다. 그리고 해당캐릭터를 누르면 C_ENTER_GAME을 보낸다.
-		UGameplayStatics::OpenLevel(GWorld, TEXT("DevMap"));
+		
 	}
 	for (int32 i = 0; i < pkt.players_size(); ++i)
 	{
 		const Protocol::PlayerInfo& Player = pkt.players(i);
 	}
+	if (auto* GameInstance = Cast<USGameInstance>(GWorld->GetGameInstance()))
+	{
+		GameInstance->ShowCharacterSelect(pkt);
+	}
 	
-	Protocol::C_ENTER_GAME enterGame;
-
-	enterGame.set_playerindex(0);
-	SEND_PACKET(enterGame);
+	// Protocol::C_ENTER_GAME enterGame;
+	//
+	// enterGame.set_playerindex(0);
+	// SEND_PACKET(enterGame);
 	
 	return true;
 }
