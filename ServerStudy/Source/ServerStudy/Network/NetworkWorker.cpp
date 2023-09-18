@@ -74,10 +74,13 @@ bool RecvWorker::ReceivePacket(TArray<uint8>& OutPacket)
 
 	OutPacket = HeaderBuffer;
 
-	TArray<uint8> PayloadBuffer;
 	const int32 PayloadSize = Header.PacketSize - HeaderSize;
 	OutPacket.AddZeroed(PayloadSize);//resize
 
+	//아무것도 보내지 않았다면 
+	if(PayloadSize <= 0)
+		return true;
+	
 	//패킷 페이로드(헤더를 제외한 나머지)의 조립
 	if (ReceiveDesiredBytes(&OutPacket[HeaderSize], PayloadSize))
 		return true;

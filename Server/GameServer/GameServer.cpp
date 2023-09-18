@@ -54,10 +54,10 @@ int main()
 	// Main Thread
 	while (true)
 	{
-		Protocol::S_CHAT pkt;
-		pkt.set_msg("HelloWorld");
-		auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
-		GSessionManager.Broadcast(sendBuffer);
+		//Protocol::S_CHAT pkt;
+		//pkt.set_msg("HelloWorld");
+		//auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+		//GSessionManager.Broadcast(sendBuffer);
 		this_thread::sleep_for(1s);
 	}
 

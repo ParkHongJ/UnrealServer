@@ -31,9 +31,9 @@ void USGameInstance::ConnectToGameServer()
 		GameServerSession = MakeShared<PacketSession>(Socket);
 		GameServerSession->Run();
 
-		Protocol::C_LOGIN pkt;
-		SendBufferRef SendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
-		SendPacket(SendBuffer);
+		// Protocol::C_LOGIN pkt;
+		// SendBufferRef SendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+		// SendPacket(SendBuffer);
 	}
 	else
 	{
@@ -43,12 +43,10 @@ void USGameInstance::ConnectToGameServer()
 
 void USGameInstance::DisconnectFromGameServer()
 {
-	if (Socket)
-	{
-		ISocketSubsystem* SocketSubsystem = ISocketSubsystem::Get();
-		SocketSubsystem->DestroySocket(Socket);
-		Socket = nullptr;
-	}
+	if (Socket == nullptr || GameServerSession == nullptr)
+		return;
+	Protocol::C_LEAVE_GAME leavePkt;
+	SEND_PACKET(leavePkt);
 }
 
 void USGameInstance::HandleRecvPackets()
@@ -65,4 +63,68 @@ void USGameInstance::SendPacket(SendBufferRef SendBuffer)
 		return;
 
 	GameServerSession->SendPacket(SendBuffer);
+}
+
+void USGameInstance::SendLoginPacket(FString Id, FString Password)
+{
+	Protocol::C_LOGIN pkt;
+	SendBufferRef SendBuffer = ClientPacketHandler::MakeSendBuffer(pkt);
+	SendPacket(SendBuffer);
+}
+
+void USGameInstance::HandleSpawn(const Protocol::PlayerInfo& PlayerInfo)
+{
+	if (Socket == nullptr || GameServerSession == nullptr)
+		return;
+
+	auto* World = GetWorld();
+
+	if (World == nullptr)
+		return;
+
+	const uint64 ObjectId = PlayerInfo.object_id();
+	if(Players.Find(ObjectId) != nullptr)
+		return;
+
+	FVector SpawnLocation(PlayerInfo.x(), PlayerInfo.y(), PlayerInfo.z());
+	AActor* Actor = World->SpawnActor(PlayerClass, &SpawnLocation);
+
+	Players.Add(PlayerInfo.object_id(), Actor);
+}
+
+void USGameInstance::HandleSpawn(const Protocol::S_ENTER_GAME& EnterPkt)
+{
+	HandleSpawn(EnterPkt.player());
+}
+
+void USGameInstance::HandleSpawn(const Protocol::S_SPAWN& SpawnPkt)
+{
+	for(auto& player : SpawnPkt.players())
+	{
+		HandleSpawn(player);
+	}
+}
+
+void USGameInstance::HandleDespawn(uint64 ObjectId)
+{
+	if (Socket == nullptr || GameServerSession == nullptr)
+		return;
+
+	auto* World = GetWorld();
+	if (World == nullptr)
+		return;
+
+	AActor** FindActor = Players.Find(ObjectId);
+	if (FindActor == nullptr)
+		return;
+
+	World->DestroyActor(*FindActor);
+}
+
+void USGameInstance::HandleDespawn(const Protocol::S_DESPAWN& DespawnPkt)
+{
+	for (auto& ObjectId : DespawnPkt.object_ids())
+	{
+		HandleDespawn(ObjectId);
+	}
 }

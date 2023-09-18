@@ -1,8 +1,5 @@
 #include "ClientPacketHandler.h"
-#include "BufferReader.h"
-#include "PacketSession.h"
-#include "NetworkActorBase/NetworkActorBase.h"
-
+#include "ServerStudy.h"
 PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
 bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len)
@@ -16,28 +13,52 @@ bool Handle_S_LOGIN(PacketSessionRef& session, Protocol::S_LOGIN& pkt)
 	{
 		//로그인 성공
 		//로그인 정보를 받아서 나의 캐릭터들을 선택한다. 그리고 해당캐릭터를 누르면 C_ENTER_GAME을 보낸다.
+		UGameplayStatics::OpenLevel(GWorld, TEXT("DevMap"));
+	}
+	for (int32 i = 0; i < pkt.players_size(); ++i)
+	{
+		const Protocol::PlayerInfo& Player = pkt.players(i);
 	}
 	
-
-	auto player = pkt.players();
-	if (!player.empty())
-	{
-		FWorldContext* world = GEngine->GetWorldContextFromGameViewport(GEngine->GameViewport);
-
-		UWorld* uWorld = world->World();
-		ANetworkActorBase* actor = Cast<ANetworkActorBase>(uWorld->SpawnActor(ANetworkActorBase::StaticClass()));
-		actor->SetID(player[0].playerid());	
-	}	
-	
 	Protocol::C_ENTER_GAME enterGame;
-	SendBufferRef sendBuffer = ClientPacketHandler::MakeSendBuffer(enterGame);
-	session->SendPacket(sendBuffer);
+
+	enterGame.set_playerindex(0);
+	SEND_PACKET(enterGame);
+	
 	return true;
 }
 
 bool Handle_S_ENTER_GAME(PacketSessionRef& session, Protocol::S_ENTER_GAME& pkt)
 {
 	//생성해야함
+
+	if (auto* GameInstance = Cast<USGameInstance>(GWorld->GetGameInstance()))
+	{
+		GameInstance->HandleSpawn(pkt.player());
+	}
+	return true;
+}
+
+bool Handle_S_SPAWN(PacketSessionRef& session, Protocol::S_SPAWN& pkt)
+{
+	if (auto* GameInstance = Cast<USGameInstance>(GWorld->GetGameInstance()))
+	{
+		GameInstance->HandleSpawn(pkt);
+	}
+	return true;
+}
+
+bool Handle_S_DESPAWN(PacketSessionRef& session, Protocol::S_DESPAWN& pkt)
+{
+	if (auto* GameInstance = Cast<USGameInstance>(GWorld->GetGameInstance()))
+	{
+		GameInstance->HandleDespawn(pkt);
+	}
+	return true;
+}
+
+bool Handle_S_LEAVE_GAME(PacketSessionRef& session, Protocol::S_LEAVE_GAME& pkt)
+{
 	return true;
 }
 

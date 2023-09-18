@@ -26,10 +26,28 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void HandleRecvPackets();
 
-	void SendPacket(SendBufferRef SendBuffer); 
+	void SendPacket(SendBufferRef SendBuffer);
+
+	UFUNCTION(BlueprintCallable)
+	void SendLoginPacket(FString Id, FString Password);
+	
+	
+public:
+	void HandleSpawn(const Protocol::PlayerInfo& PlayerInfo);
+	void HandleSpawn(const Protocol::S_ENTER_GAME& EnterPkt);
+	void HandleSpawn(const Protocol::S_SPAWN& SpawnPkt);
+	
+	void HandleDespawn(uint64 ObjectId);
+	void HandleDespawn(const Protocol::S_DESPAWN& DespawnPkt);
 public:
 	FSocket* Socket;
 	FString IpAddress = TEXT("127.0.0.1");
 	int16 Port = 7778;
 	TSharedPtr<class PacketSession> GameServerSession;
+
+public:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> PlayerClass;
+
+	TMap<uint64, AActor*> Players;
 };

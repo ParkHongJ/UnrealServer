@@ -32,10 +32,12 @@ void Session::Send(SendBufferRef sendBuffer)
 
 		if (_sendRegistered.exchange(true) == false)
 			registerSend = true;
+
+		//한 스레드가 Send가 끝날때 까지 다른 스레드가 대기를 해야한다.
+		if (registerSend)
+			RegisterSend();
 	}
 	
-	if (registerSend)
-		RegisterSend();
 }
 
 bool Session::Connect()
@@ -165,7 +167,7 @@ void Session::RegisterSend()
 
 	// 보낼 데이터를 sendEvent에 등록
 	{
-		WRITE_LOCK;
+		//WRITE_LOCK;
 
 		int32 writeSize = 0;
 		while (_sendQueue.empty() == false)
